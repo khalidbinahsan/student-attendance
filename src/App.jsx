@@ -30,11 +30,24 @@ function App() {
         setStudentName("")
     }
     const updateStudent = () => {
-
+        const updatedStudens = allStudents.map((student) => {
+            if(student.id === editableStudent.id) {
+                return {...student, name: studentName}
+            }
+            return student
+        })
+        setAllStudents(updatedStudens)
+        setEditMode(false)
+        setStudentName("")
     }
     const studentDelete = (studentId) => {
         const updatedStudents = allStudents.filter(student => student.id !== studentId)
         setAllStudents(updatedStudents)
+    }
+    const studentEdit = (student) => {
+        setEditMode(true)
+        setStudentName(student.name)
+        setEditableStudent(student)
     }
   return (
     <>
@@ -70,6 +83,7 @@ function App() {
                     key={student.id}
                     student={student}
                     onDelete={() => studentDelete(student.id)}
+                    onEdit={() => studentEdit(student)}
                     />       
                 ))
             )}
