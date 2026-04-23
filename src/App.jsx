@@ -58,7 +58,7 @@ function App() {
         })
 
         setAllStudents(updatedStudents)
-        
+
         }
         
     }
@@ -87,7 +87,7 @@ function App() {
     }
   return (
     <>
-    <form onSubmit={submitHandler} className="flex justify-center items-center gap-4 mb-10 mt-10">
+    <form onSubmit={submitHandler} className="flex flex-col md:flex-row justify-center items-center gap-4 mb-10 mt-10">
         <div className="relative">
             <input 
             onChange={studentNameHandler}
