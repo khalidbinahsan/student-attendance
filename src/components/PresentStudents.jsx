@@ -1,12 +1,25 @@
-export default function PresentStudents({student, onMakePresent}) {
+import PresentStudentCard from './PresentStudentCard'
+function PresentStudents({allStudents, toggleList}) {
+  const presentStudents = allStudents.filter(
+    (student) => student.isPresent === true,
+  );
   return (
-    <div className="space-y-3 mb-3">
-      <div className="border-2 border-gray-200 p-3 rounded-xl flex items-center justify-between">
-        <span className="font-semibold">{student.name}</span>
-        <button onClick={onMakePresent} className="cursor-pointer border px-4 py-1 rounded-lg text-sm bg-orange-50 hover:bg-orange-100">
-          Make Absent
-        </button>
-      </div>
+    <div className="border-2 border-gray-300 rounded-2xl p-4 bg-white min-h-[500px]">
+      <h2 className="text-center font-bold mb-4 italic">
+        Present List ({presentStudents.length})
+      </h2>
+      {presentStudents.length === 0 ? (
+        <p className="text-center">No student present</p>
+      ) : (
+        presentStudents.map((student) => (
+          <PresentStudentCard
+            key={student.id}
+            student={student}
+            onMakePresent={() => toggleList(student)}
+          />
+        ))
+      )}
     </div>
   );
 }
+export default PresentStudents

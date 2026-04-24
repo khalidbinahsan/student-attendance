@@ -1,39 +1,89 @@
-export default function AllStudents({student, onDelete, onEdit, onMakePresent, onMakeAbsent}) {
+import { useState } from "react";
+import Pagination from "./Pagination";
+import AllStudentCard from "./AllStudentCard"
+function AllStudents({allStudents, setAllStudents, setEditMode, setStudentName, setEditableStudent, toggleList}) {
+  // State
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemPerPage = 6;
+  const indexOfLastItem = currentPage * itemPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemPerPage;
+  const currentStudents = allStudents.slice(indexOfFirstItem, indexOfLastItem);
+  const totalStudentPage = Math.ceil(allStudents.length / itemPerPage);
+  
+ 
+
+  // Handler
+  const studentDelete = (studentId) => {
+    const updatedStudents = allStudents.filter(
+      (student) => student.id !== studentId,
+    );
+    setAllStudents(updatedStudents);
+  };
+  const studentEdit = (student) => {
+    setEditMode(true);
+    setStudentName(student.name);
+    setEditableStudent(student);
+  };
+  const makePresentHandler = (student) => {
+    if (student.isPresent !== undefined) {
+      alert(
+        `This student is already on the ${student.isPresent ? "present" : "absent"} list`,
+      );
+    } else {
+      const updatedStudents = allStudents.map((item) => {
+        if (item.id === student.id) {
+          return { ...item, isPresent: true };
+        }
+        return item;
+      });
+
+      setAllStudents(updatedStudents);
+    }
+  };
+  const makeAbsentHandler = (student) => {
+    if (student.isPresent !== undefined) {
+      alert(
+        `This student is already on the ${student.isPresent ? "present" : "absent"} list`,
+      );
+    } else {
+      const updatedStudents = allStudents.map((item) => {
+        if (item.id === student.id) {
+          return { ...student, isPresent: false };
+        }
+        return item;
+      });
+      setAllStudents(updatedStudents);
+    }
+  };
+
   return (
-    <div className="space-y-3 mb-3">
-      <div className="border-2 border-gray-200 p-3 rounded-xl relative">
-        { student.isPresent === true ? (
-            <span className="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide mb-3 bg-blue-100 text-blue-700 absolute top-2 right-2">
-            Present
-          </span>
-        ) : student.isPresent === false ? (
-            <span className="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide mb-3 bg-red-100 text-red-700 absolute top-2 right-2">
-              Absent
-            </span>
-        ) : (
-          null
-        )}
-        
-        <h3 className="font-semibold">{student.name}</h3>
-        <div className="flex gap-3 text-xs mt-2">
-          <button
-          onClick={onEdit}
-          className="border px-2 py-1 rounded hover:bg-gray-100 cursor-pointer">
-            Edit
-          </button>
-          <button
-          onClick={onDelete}
-          className="border px-2 py-1 rounded hover:bg-gray-100 text-red-500 cursor-pointer">
-            Remove
-          </button>
-          <button onClick={onMakePresent} className="border px-2 py-1 rounded bg-blue-50 hover:bg-blue-100 cursor-pointer">
-            Send to Present List
-          </button>
-          <button onClick={onMakeAbsent} className="border px-2 py-1 rounded bg-orange-50 hover:bg-orange-100 cursor-pointer">
-            Send to Absent List
-          </button>
-        </div>
-      </div>
+    <div className="border-2 border-gray-300 rounded-2xl p-4 bg-white min-h-[500px]">
+      <h2 className="text-center font-bold mb-4 italic">
+        All Student ({allStudents.length})
+      </h2>
+      {allStudents.length === 0 ? (
+        <p className="text-center">No student added. Please add student</p>
+      ) : (
+        currentStudents.map((student) => (
+          <AllStudentCard
+            key={student.id}
+            student={student}
+            onDelete={() => studentDelete(student.id)}
+            onEdit={() => studentEdit(student)}
+            onMakePresent={() => makePresentHandler(student)}
+            onMakeAbsent={() => makeAbsentHandler(student)}
+            toggleList={toggleList}
+          />
+        ))
+      )}
+      {allStudents.length > itemPerPage && (
+        <Pagination
+          pages={totalStudentPage}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+        />
+      )}
     </div>
   );
 }
+export default AllStudents;
