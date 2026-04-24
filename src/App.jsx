@@ -2,6 +2,7 @@ import { useState } from 'react'
 import AllStudents from './components/AllStudents'
 import PresentStudents from './components/PresentStudents'
 import AbsentStudents from './components/AbsentStudents'
+import Pagination from './components/Pagination'
 
 function App() {
     const [allStudents, setAllStudents] = useState([])
@@ -10,6 +11,13 @@ function App() {
     const [editableStudent, setEditableStudent] = useState(null)
     const presentStudents = allStudents.filter(student => student.isPresent === true)
     const absentStudents = allStudents.filter(student => student.isPresent === false)
+    // Pagination
+    const [currentPage, setCurrentPage] = useState(1)
+    const itemPerPage = 6
+    const indexOfLastItem = currentPage * itemPerPage
+    const indexOfFirstItem = indexOfLastItem - itemPerPage
+    const currentStudents = allStudents.slice(indexOfFirstItem, indexOfLastItem)
+    const totalStudentPage = Math.ceil(allStudents.length / itemPerPage)
     const studentNameHandler = (e) => {
         setStudentName(e.target.value)
     }
@@ -85,6 +93,7 @@ function App() {
         })
         setAllStudents(updatedStudents)
     }
+    
   return (
     <>
     <form onSubmit={submitHandler} className="flex flex-col md:flex-row justify-center items-center gap-4 mb-10 mt-10">
@@ -117,7 +126,7 @@ function App() {
             {allStudents.length === 0 ? (
                 <p className="text-center">No student added. Please add student</p>
             ) : (
-                allStudents.map( student => (
+                currentStudents.map( student => (
                     <AllStudents
                     key={student.id}
                     student={student}
@@ -127,7 +136,15 @@ function App() {
                     onMakeAbsent={() => makeAbsentHandler(student)}
                     />       
                 ))
-            )}           
+            )}
+            {allStudents.length > itemPerPage && (
+                <Pagination
+                    pages={totalStudentPage}
+                    currentPage={currentPage}
+                    setCurrentPage={setCurrentPage}
+                />
+            )}
+                    
         </div>
 
         <div className="border-2 border-gray-300 rounded-2xl p-4 bg-white min-h-[500px]">
