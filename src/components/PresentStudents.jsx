@@ -1,5 +1,8 @@
+import { useContext } from 'react';
 import PresentStudentCard from './PresentStudentCard'
-function PresentStudents({allStudents, toggleList}) {
+import { StudentCtx } from '../contexts/Student';
+function PresentStudents() {
+  const {allStudents, toggleList} = useContext(StudentCtx)
   const presentStudents = allStudents.filter(
     (student) => student.isPresent === true,
   );

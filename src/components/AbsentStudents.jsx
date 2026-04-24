@@ -1,5 +1,8 @@
+import { useContext } from 'react';
 import AbsentStudentCard from './AbsentStudentCard'
-function AbsentStudents({allStudents, toggleList}) {
+import { StudentCtx } from '../contexts/Student';
+function AbsentStudents() {
+  const {allStudents, toggleList} = useContext(StudentCtx)
   const absentStudents = allStudents.filter(
     (student) => student.isPresent === false,
   );

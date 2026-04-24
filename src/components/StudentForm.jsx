@@ -1,5 +1,7 @@
-
-function StudentForm({setAllStudents, studentName, setStudentName, editMode, allStudents, editableStudent, setEditMode}) {
+import {  useContext } from "react";
+import {StudentCtx} from "../contexts/Student"
+function StudentForm() {
+  const {setAllStudents, setStudentName, editMode, studentName, allStudents, editableStudent, setEditMode} = useContext(StudentCtx)
   // Functions
   const studentNameHandler = (e) => {
     setStudentName(e.target.value);
